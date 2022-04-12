@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Diminishing Returns</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			.card {
+				box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+				transition: 0s;
+				width:125px;
+				border-radius: 5px;
+				margin:25px;
+				padding:12px;
+			}
+			.card:hover:not([selected]) {
+				box-shadow: 5px 8px 10px 0 rgba(0,0,0,0.8);
+			}
+			img {
+				border-radius: 5px 5px 0 0;
+				width:100%;
+			}
+			.container {
+				padding: 2px 16px;
+			}			
+			div[selected]{
+				box-shadow: 5px 8px 10px 0 #008CBA;
+				border-style:solid;
+				border-width:2px;
+				border-color:#008CBA;
+			}
+			.flex-container{
+				display:flex;
+				justify-content:center;
+			}
+			.button {
+				background-color: #4CAF50;
+				border: none;
+				color: white;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				border-radius: 3px;
+			}
+			.button-red {
+				background-color: #f44336;
+				border: none;
+				color: white;
+				padding: 15px 32px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				border-radius: 3px;
+			}
+			.thumbs-up{
+				content:url("https://wow.zamimg.com/images/wow/icons/large/thumbsup.jpg");
+				width:150px;
+				border-style:solid;
+				border-color:green;
+				border-width:5px;
+				margin-top:20px;
+			}
+			.thumbs-down{
+				content:url("https://wow.zamimg.com/images/wow/icons/large/thumbsdown.jpg");
+				width:150px;
+				border-style:solid;
+				border-color:red;
+				border-width:5px;
+				margin-top:20px;
+			}
+			button:hover {
+				box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.8);
+			}
+			button {
+				margin:5px;
+			}
+		</style>
+		<script>
+			var spells = [];
+			var selected = [];
+			var answers = [];
+			var drs = [
+				{id: 0, type: 'Incapacitate', spellId: '217832', name: 'Imprison', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_demonhunter_imprison.jpg'},
+				{id: 1, type: 'Incapacitate', spellId: '99', name: 'Incapaciating Roar', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_druid_demoralizingroar.jpg'},
+				{id: 2, type: 'Incapacitate', spellId: '2637', name: 'Hibernate', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_sleep.jpg'},
+				{id: 3, type: 'Incapacitate', spellId: '187650', name: 'Freezing Trap', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_frost_chainsofice.jpg'},
+				{id: 4, type: 'Incapacitate', spellId: '213691', name: 'Scatter Shot', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_golemstormbolt.jpg'},
+				{id: 5, type: 'Incapacitate', spellId: '118', name: 'Polymorph', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_polymorph.jpg'},
+				{id: 6, type: 'Incapacitate', spellId: '113724', name: 'Ring of Frost', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_frost_ring-of-frost.jpg'},
+				{id: 7, type: 'Incapacitate', spellId: '115078', name: 'Paralysis', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_monk_paralysis.jpg'},
+				{id: 8, type: 'Incapacitate', spellId: '20066', name: 'Repentance', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_prayerofhealing.jpg'},
+				{id: 9, type: 'Incapacitate', spellId: '88625', name: 'Chastise', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_chastise.jpg'},
+				{id: 10, type: 'Incapacitate', spellId: '9484', name: 'Shackle Undead', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_slow.jpg'},
+				{id: 11, type: 'Incapacitate', spellId: '1776', name: 'Gouge', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_gouge.jpg'},
+				{id: 12, type: 'Incapacitate', spellId: '6770', name: 'Sap', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_sap.jpg'},
+				{id: 13, type: 'Incapacitate', spellId: '51514', name: 'Hex', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shaman_hex.jpg'},
+				{id: 14, type: 'Incapacitate', spellId: '197214', name: 'Sundering', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_rhyolith_lavapool.jpg'},
+				{id: 15, type: 'Incapacitate', spellId: '710', name: 'Banish', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_cripple.jpg'},
+				{id: 16, type: 'Incapacitate', spellId: '6789', name: 'Mortal Coil', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_warlock_mortalcoil.jpg'},
+				{id: 17, type: 'Incapacitate', spellId: '107079', name: 'Quaking Palm', link: 'https://wow.zamimg.com/images/wow/icons/large/pandarenracial_quiveringpain.jpg'},
+				{id: 18, type: 'Disorient', spellId: '207167', name: 'Blinding Sleet', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_frost_chillingblast.jpg'},
+				{id: 19, type: 'Disorient', spellId: '207684', name: 'Sigil of Misery', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_demonhunter_sigilofmisery.jpg'},
+				{id: 21, type: 'Disorient', spellId: '1513', name: 'Scare Beast', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_druid_cower.jpg'},
+				{id: 22, type: 'Disorient', spellId: '31661', name: 'Dragons Breath', link: 'https://wow.zamimg.com/images/wow/icons/large/inv_misc_head_dragon_01.jpg'},
+				{id: 23, type: 'Disorient', spellId: '198898', name: 'Song of Chi-Ji', link: 'https://wow.zamimg.com/images/wow/icons/large/inv_chaos_orb.jpg'},
+				{id: 24, type: 'Disorient', spellId: '202272', name: 'Incendiary Breath', link: 'https://wow.zamimg.com/images/wow/icons/large/inv_misc_fireink.jpg'},
+				{id: 25, type: 'Disorient', spellId: '115750', name: 'Blinding Light', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_paladin_blindinglight.jpg'},
+				{id: 26, type: 'Disorient', spellId: '19725', name: 'Turn Undead', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_turnundead.jpg'},
+				{id: 27, type: 'Disorient', spellId: '205369', name: 'Mind Bomb', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_mindbomb.jpg'},
+				{id: 28, type: 'Disorient', spellId: '605', name: 'Mind Control', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowworddominate.jpg'},
+				{id: 29, type: 'Disorient', spellId: '8122', name: 'Psychic Scream', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_psychicscream.jpg'},
+				{id: 30, type: 'Disorient', spellId: '2094', name: 'Blind', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_mindsteal.jpg'},
+				{id: 31, type: 'Disorient', spellId: '5782', name: 'Fear', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_possession.jpg'},
+				{id: 32, type: 'Disorient', spellId: '5484', name: 'Howl of Terror', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_warlock_howlofterror.jpg'},
+				{id: 33, type: 'Disorient', spellId: '6358', name: 'Seduction', link: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_seduction.jpg'},
+				{id: 34, type: 'Disorient', spellId: '5246', name: 'Intimidating Shout', link: 'https://wow.zamimg.com/images/wow/icons/large/ability_golemthunderclap.jpg'}
+			];
+			function load(){
+				document.getElementById("ans").innerHTML = "";
+				spells = [];
+				clearSelected();
+				answers = [];
+				var arr = [];
+				var incapCount = 0;
+				var disCount = 0;
+				while(arr.length < 3){
+					var r = Math.floor(Math.random() * 35);
+					if (arr.indexOf(r) === -1){
+						arr.push(r);
+					}
+				}
+				for(let i = 0; i < arr.length; i++){
+					var spell = drs[arr[i]];
+					spells.push(spell);
+					var imgEle = document.getElementById("img" + i);
+					//var linkEle = document.getElementById("link" + i);
+					var nameEle = document.getElementById("spellName"+i);
+					imgEle.src=spell.link;
+					//linkEle.setAttribute("data-wowhead","spell="+spell.spellId);
+					nameEle.innerHTML=spell.name;
+					if (spell.type === "Incapacitate"){
+						incapCount++;
+					}
+					else{
+						disCount++;
+					}
+				}
+				if (incapCount > disCount){
+					spells.forEach((x,i) => {
+						if (x.type === "Incapacitate"){
+							answers.push(i);
+						}
+					});
+				}
+				else {
+					spells.forEach((x,i) => {
+						if (x.type === "Disorient"){
+							answers.push(i);
+						}
+					});
+				}
+			}
+			function select(i){
+				document.getElementById("ansImg").removeAttribute("class","thumbs-up");
+				document.getElementById("ansImg").removeAttribute("class","thumbs-down");
+				var element = document.getElementById("spell" + i);
+				var isSelected = element.getAttribute("selected");
+				if (isSelected === null){
+					element.setAttribute("selected",true);
+					selected.push(i);
+				}
+				else{
+					element.removeAttribute("selected");
+					removeItem(selected,i);
+				}
+			}
+			function clearSelected(){
+				selected = [];
+				document.getElementById("spell0").removeAttribute("selected");
+				document.getElementById("spell1").removeAttribute("selected");
+				document.getElementById("spell2").removeAttribute("selected");
+				document.getElementById("ansImg").removeAttribute("class","thumbs-up");
+				document.getElementById("ansImg").removeAttribute("class","thumbs-down");
+			}
+			function removeItem(arr, value) {
+				var index = arr.indexOf(value);
+				if (index > -1) {
+					arr.splice(index, 1);
+				}
+				return arr;
+			}
+			function check(){
+				document.getElementById("ans").innerHTML = "";
+				var sel = 0;
+				var ans = 0;
+				selected.forEach(x => {
+					sel+=x+1;
+				});
+				answers.forEach(x => {
+					ans+=x+1;
+				});
+				if (sel===ans){
+					document.getElementById("ansImg").setAttribute("class","thumbs-up");
+				}
+				else{
+					document.getElementById("ansImg").setAttribute("class","thumbs-down");
+				}
+				document.getElementById('ans').style.visibility='shown';
+			}
+		</script>
+	</head>
+	<body onload="load();">
+		
+		<div id="ans"></div>
+		
+		<div class="flex-container">
+			<h1>Which of the following spells are on the same DR?</h1>
+		</div>
+		<div class="flex-container">
+			<div id="spell0" class="card" onclick="select(0)">
+				<img id="img0">
+				<div class="container">
+					<b><div id="spellName0"></div></b>
+				</div>
+			</div>
+			
+			<div id="spell1" class="card" onclick="select(1)">
+				<img id="img1">
+				<div class="container">
+					<b><div id="spellName1"></div></b>
+				</div>
+			</div>
+			
+			<div id="spell2" class="card" onclick="select(2)">
+				<img id="img2">
+				<div class="container">
+					<b><div id="spellName2"></div></b>
+				</div>
+			</div>
+		</div>
+		<div class="flex-container">
+			<button class="button" onclick="check()">Submit</button>
+			<button class="button-red" onclick="load()" id="btnReset">Reset</button>
+		</div>
+		<div class="flex-container">
+			<img id="ansImg" >
+		</div>
+	</body>
+</html>
