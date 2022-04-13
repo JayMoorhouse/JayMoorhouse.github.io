@@ -12,6 +12,9 @@
 				border-radius: 5px;
 				margin:25px;
 				padding:12px;
+				display:flex;
+				flex-direction:column;
+				height:195px;
 			}
 			.card:hover:not([selected]) {
 				box-shadow: 5px 8px 10px 0 rgba(0,0,0,0.8);
@@ -22,6 +25,13 @@
 			}
 			.container {
 				padding: 2px 16px;
+				height:100%;
+				position:relative;
+			}	
+			.type {
+				position: absolute;
+				bottom: 0;
+				font-style:italic;
 			}			
 			div[selected]{
 				box-shadow: 5px 8px 10px 0 #008CBA;
@@ -57,7 +67,7 @@
 			}
 			.thumbs-up{
 				content:url("https://wow.zamimg.com/images/wow/icons/large/thumbsup.jpg");
-				width:150px;
+				width:75px;
 				border-style:solid;
 				border-color:green;
 				border-width:5px;
@@ -65,7 +75,7 @@
 			}
 			.thumbs-down{
 				content:url("https://wow.zamimg.com/images/wow/icons/large/thumbsdown.jpg");
-				width:150px;
+				width:75px;
 				border-style:solid;
 				border-color:red;
 				border-width:5px;
@@ -76,6 +86,9 @@
 			}
 			button {
 				margin:5px;
+			}
+			.name {
+				padding-top:10px;
 			}
 		</style>
 		<script>
@@ -136,10 +149,8 @@
 					var spell = drs[arr[i]];
 					spells.push(spell);
 					var imgEle = document.getElementById("img" + i);
-					//var linkEle = document.getElementById("link" + i);
 					var nameEle = document.getElementById("spellName"+i);
 					imgEle.src=spell.link;
-					//linkEle.setAttribute("data-wowhead","spell="+spell.spellId);
 					nameEle.innerHTML=spell.name;
 					if (spell.type === "Incapacitate"){
 						incapCount++;
@@ -184,6 +195,9 @@
 				document.getElementById("spell2").removeAttribute("selected");
 				document.getElementById("ansImg").removeAttribute("class","thumbs-up");
 				document.getElementById("ansImg").removeAttribute("class","thumbs-down");
+				document.getElementById("type0").innerHTML = "";
+				document.getElementById("type1").innerHTML = "";
+				document.getElementById("type2").innerHTML = "";
 			}
 			function removeItem(arr, value) {
 				var index = arr.indexOf(value);
@@ -193,7 +207,6 @@
 				return arr;
 			}
 			function check(){
-				document.getElementById("ans").innerHTML = "";
 				var sel = 0;
 				var ans = 0;
 				selected.forEach(x => {
@@ -204,11 +217,13 @@
 				});
 				if (sel===ans){
 					document.getElementById("ansImg").setAttribute("class","thumbs-up");
+					document.getElementById("type0").innerHTML = spells[0].type + "*";
+					document.getElementById("type1").innerHTML = spells[1].type + "*";
+					document.getElementById("type2").innerHTML = spells[2].type + "*";
 				}
 				else{
 					document.getElementById("ansImg").setAttribute("class","thumbs-down");
 				}
-				document.getElementById('ans').style.visibility='shown';
 			}
 		</script>
 	</head>
@@ -223,21 +238,23 @@
 			<div id="spell0" class="card" onclick="select(0)">
 				<img id="img0">
 				<div class="container">
-					<b><div id="spellName0"></div></b>
+					<b><div id="spellName0" class="name"></div></b>
+					<div id="type0" class="type"></div>
 				</div>
 			</div>
-			
 			<div id="spell1" class="card" onclick="select(1)">
 				<img id="img1">
 				<div class="container">
-					<b><div id="spellName1"></div></b>
+					<b><div id="spellName1" class="name"></div></b>
+					<div id="type1" class="type"></div>
 				</div>
 			</div>
 			
 			<div id="spell2" class="card" onclick="select(2)">
 				<img id="img2">
 				<div class="container">
-					<b><div id="spellName2"></div></b>
+					<b><div id="spellName2" class="name"></div></b>
+					<div id="type2" class="type"></div>
 				</div>
 			</div>
 		</div>
